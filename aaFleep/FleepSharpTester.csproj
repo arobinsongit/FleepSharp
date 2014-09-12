@@ -88,9 +88,9 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\FleepClient\FleepClient.csproj">
+    <ProjectReference Include="..\FleepClient\Fleep.csproj">
       <Project>{b267b519-eb7f-4d08-a404-919b2e55b846}</Project>
-      <Name>FleepClient</Name>
+      <Name>Fleep</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

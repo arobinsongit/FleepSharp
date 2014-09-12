@@ -2,14 +2,14 @@
 using Newtonsoft.Json;
 using log4net;
 using log4net.Config;
+using System.Collections.Generic;
 using Fleep.TypeClasses;
 using Fleep.Exceptions;
-using System.Numerics;
 
 namespace Fleep.MethodClasses
 {
-    [JsonObject(MemberSerialization.OptIn)]
-    public class Conversation_SyncBackwardRequest : MethodRequestBase
+    [JsonObject(MemberSerialization.OptOut)]
+    public class Conversation_SyncBackwardResponse : PageAPIConversationSync
     {
         /*
         conversation/sync_backward
@@ -25,28 +25,17 @@ namespace Fleep.MethodClasses
 
         header              dict            - HeaderInfo record
         stream              list            - see account/poll for stream record definitions
+
         */
 
-        #region "Inputs"
-
-        [JsonProperty]
-        public BigInteger from_message_nr { get; set; }
-
-        public string ConversationID { get; set; }
+        #region "Outputs"
 
         #endregion
 
-        #region "Utility Properties"
-        /// <summary>
-        /// Path to method on API
-        /// </summary>
-        public string MethodPath
-        {
-            get
-            {
-                return "conversation/sync_backward/" + this.ConversationID;
-            }
-        }
+        #region "Constructors"
+
+        // No constructors
+
         #endregion
 
         #region "JSON Methods"

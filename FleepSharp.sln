@@ -5,7 +5,7 @@ VisualStudioVersion = 12.0.30501.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FleepSharpTester", "aaFleep\FleepSharpTester.csproj", "{D90C1CBE-3E96-43C7-A831-5701F5120BEB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FleepClient", "FleepClient\FleepClient.csproj", "{B267B519-EB7F-4D08-A404-919B2E55B846}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fleep", "FleepClient\Fleep.csproj", "{B267B519-EB7F-4D08-A404-919B2E55B846}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

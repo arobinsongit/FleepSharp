@@ -7,7 +7,7 @@
     <ProjectGuid>{B267B519-EB7F-4D08-A404-919B2E55B846}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>FleepClient</RootNamespace>
+    <RootNamespace>Fleep</RootNamespace>
     <AssemblyName>FleepClient</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -47,9 +47,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="cClient.cs" />
-    <Compile Include="CodeFile1.cs" />
+    <Compile Include="FleepClient.cs" />
+    <Compile Include="Enumerations\enum.cs" />
     <Compile Include="Exceptions\NotLoggedInException.cs" />
+    <Compile Include="MethodClasses\Conversation_SyncRequest.cs" />
+    <Compile Include="MethodClasses\Conversation_SyncResponse.cs" />
     <Compile Include="MethodClasses\Conversation_SyncBackwardResponse.cs" />
     <Compile Include="MethodClasses\Conversation_SyncBackwardRequest.cs" />
     <Compile Include="MethodClasses\Message_SendResponse.cs" />
@@ -64,6 +66,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TypeClasses\Type_FileInfoList.cs" />
     <Compile Include="TypeClasses\Type_FileInfo.cs" />
+    <Compile Include="TypeClasses\Type_FleepAPICallBase.cs" />
     <Compile Include="TypeClasses\Type_FleepTypeBase.cs" />
     <Compile Include="TypeClasses\Type_Conversation.cs" />
     <Compile Include="TypeClasses\Type_PageAPIConversationSyncStream.cs" />
@@ -73,6 +76,8 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.Config" />
+    <None Include="Helpers\api.py" />
+    <None Include="Helpers\base.py" />
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

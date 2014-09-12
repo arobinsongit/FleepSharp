@@ -10,10 +10,10 @@ using System.Windows.Forms;
 
 using System.IO;
 using System.Net;
-using FleepClient;
-using FleepClient.MethodClasses;
-using FleepClient.TypeClasses;
-using FleepClient.Exceptions;
+using Fleep;
+using Fleep.MethodClasses;
+using Fleep.TypeClasses;
+using Fleep.Exceptions;
 
 using Newtonsoft.Json;
 using System.Numerics;
@@ -23,8 +23,9 @@ namespace aaFleep
     public partial class Form1 : Form
     {
 
-        private FleepClient.Client fc;
+        private Fleep.FleepClient fc;
         private string ConversationID;
+        Conversation newConversation;
 
         public string GetPrettyPrintedJson(string json)
         {
@@ -47,31 +48,15 @@ namespace aaFleep
 
             try
             {
-                fc = new FleepClient.Client("andy@phase2automation.com", "3EYrAJrPymCFzsdA");
-            }
-            catch (Exception ex)
-            {
-                log(ex.ToString());
-                return;
-            }
+                fc = new Fleep.FleepClient("andy@phase2automation.com", "3EYrAJrPymCFzsdA");
 
-            Conversation newConversation = new Conversation(fc);
+            newConversation = new Conversation(fc);
 
             newConversation.ConversationCreate("ABC", "aprobi@gmail.com", "First Message 2");
 
             log("Created Conversation " + newConversation.ConversationID);
 
-            newConversation.MessageSend("This is a New Message Send");
-            newConversation.MessageSend("This is a New Message Send");
-            newConversation.MessageSend("This is a New Message Send");
 
-            newConversation.SyncBackward((BigInteger)0);
-
-            int x = 1;
-
-            newConversation.SyncBackward((BigInteger)9999);
-
-            x = 2;
 
             //Message_SendResponse messageSendResponse;
 
@@ -81,8 +66,33 @@ namespace aaFleep
             //newConversation.MessageSend(out messageSendResponse, ConversationID, "Another Message at " + System.DateTime.Now.Ticks.ToString());
             //log("Message Number = " + messageSendResponse.result_message_nr);
 
+            }
+            catch (Exception ex)
+            {
+                log(ex.ToString());
+                return;
+            }
             
 
         }
+
+        private void textBox1_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void btnSend_Click(object sender, EventArgs e)
+        {
+            newConversation.MessageSend(textBox1.Text);
+
+            log("Last Message Sent = " + newConversation.LastMessageNumberSent);
+
+            //log("Last Sync Backwards");
+            //newConversation.SyncBackward((BigInteger)1);
+            //log(newConversation.LastConversationSyncBackwardResponse.ToJSONPrint());
+
+
+        }
+
     }
 }

@@ -3,13 +3,13 @@ using Newtonsoft.Json;
 using log4net;
 using log4net.Config;
 using System.Collections.Generic;
-using FleepClient.TypeClasses;
-using FleepClient.Exceptions;
+using Fleep.TypeClasses;
+using Fleep.Exceptions;
 
-namespace FleepClient.MethodClasses
+namespace Fleep.MethodClasses
 {
     [JsonObject(MemberSerialization.OptOut)]
-    public class Conversation_SyncBackwardResponse : PageAPIConversationSync
+    public class Conversation_SyncResponse : PageAPIConversationSync
     {
         /*
         conversation/sync_backward

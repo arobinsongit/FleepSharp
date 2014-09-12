@@ -5,7 +5,7 @@ using log4net.Config;
 using System.Collections.Generic;
 using System.Net;
 
-namespace FleepClient.UtilityMethods
+namespace Fleep.UtilityMethods
 {
     public class UtilityMethods
     {

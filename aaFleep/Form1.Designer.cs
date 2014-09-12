@@ -30,6 +30,8 @@
         {
             this.button1 = new System.Windows.Forms.Button();
             this.txtLog = new System.Windows.Forms.TextBox();
+            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.btnSend = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // button1
@@ -44,18 +46,38 @@
             // 
             // txtLog
             // 
-            this.txtLog.Location = new System.Drawing.Point(11, 41);
+            this.txtLog.Location = new System.Drawing.Point(11, 92);
             this.txtLog.Multiline = true;
             this.txtLog.Name = "txtLog";
             this.txtLog.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.txtLog.Size = new System.Drawing.Size(759, 423);
-            this.txtLog.TabIndex = 1;            
+            this.txtLog.Size = new System.Drawing.Size(759, 372);
+            this.txtLog.TabIndex = 1;
+            // 
+            // textBox1
+            // 
+            this.textBox1.Location = new System.Drawing.Point(16, 45);
+            this.textBox1.Name = "textBox1";
+            this.textBox1.Size = new System.Drawing.Size(457, 20);
+            this.textBox1.TabIndex = 2;
+            this.textBox1.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
+            // 
+            // btnSend
+            // 
+            this.btnSend.Location = new System.Drawing.Point(479, 43);
+            this.btnSend.Name = "btnSend";
+            this.btnSend.Size = new System.Drawing.Size(75, 23);
+            this.btnSend.TabIndex = 3;
+            this.btnSend.Text = "Send";
+            this.btnSend.UseVisualStyleBackColor = true;
+            this.btnSend.Click += new System.EventHandler(this.btnSend_Click);
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(782, 485);
+            this.Controls.Add(this.btnSend);
+            this.Controls.Add(this.textBox1);
             this.Controls.Add(this.txtLog);
             this.Controls.Add(this.button1);
             this.Name = "Form1";
@@ -69,6 +91,8 @@
 
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.TextBox txtLog;
+        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.Button btnSend;
     }
 }
 

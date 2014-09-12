@@ -2,10 +2,10 @@
 using Newtonsoft.Json;
 using log4net;
 using log4net.Config;
-using FleepClient.TypeClasses;
-using FleepClient.Exceptions;
+using Fleep.TypeClasses;
+using Fleep.Exceptions;
 
-namespace FleepClient.MethodClasses
+namespace Fleep.MethodClasses
 {
     [JsonObject(MemberSerialization.OptIn)]
     public class Account_LoginRequest : MethodRequestBase

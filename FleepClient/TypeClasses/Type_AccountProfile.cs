@@ -4,7 +4,7 @@ using log4net;
 using log4net.Config;
 using System.Collections.Generic;
 
-namespace FleepClient.TypeClasses
+namespace Fleep.TypeClasses
 {
     // Reference : http://json2csharp.com/#
 

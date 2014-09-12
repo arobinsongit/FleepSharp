@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.Serialization;
 
-namespace FleepClient.Exceptions
+namespace Fleep.Exceptions
 {
 [Serializable]
 public class NotLoggedInException : Exception

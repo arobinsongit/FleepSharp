@@ -11,31 +11,36 @@ using System.Collections.Specialized;
 using Newtonsoft.Json;
 using System.Text.RegularExpressions;
 
-using FleepClient.Exceptions;
-using FleepClient.TypeClasses;
-using FleepClient.MethodClasses;
-using FleepClient.UtilityMethods;
+using Fleep.Exceptions;
+using Fleep.TypeClasses;
+using Fleep.MethodClasses;
+using Fleep.UtilityMethods;
 
-namespace FleepClient
+namespace Fleep
 {
-    public class Client
+    public class FleepClient
     {
         private static ILog logger = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         private Account_LoginResponse accountLoginResponse;
         private WebHeaderCollection accountLoginWebHeaderCollection;
 
-        private const string apiURL = "https://fleep.io/api/";
-        
-        public Client()
+        private string apiURL = "https://fleep.io/api/";
+        private const int validHTTPStatus = 200;
+
+        private int lastReturnCode;
+
+        public FleepClient()
         {
             // Do Nothing;
         }
 
-        public Client(string email, string password)
+        public FleepClient(string email, string password)
         {
             this.AccountLogin(email, password);
         }
+
+        #region Properties
 
         public string TokenID
         {
@@ -60,13 +65,12 @@ namespace FleepClient
                     return "";
                 }
 
-
                 try
                 {
                     // Pick out token_id and trim the trailing ; b/c I'm not smart enough to figure out regex to exclude :-)
                     resultString = Regex.Match(cookieString, "token_id=(?<token_id>.*?);").Groups["token_id"].Value.TrimEnd(';');
                 }
-                catch (ArgumentException ex)
+                catch
                 {
                     return "";
                 }
@@ -79,7 +83,18 @@ namespace FleepClient
         {
             get
             {
-                return accountLoginResponse.ticket;
+                if (accountLoginResponse == null)
+                {
+                    return "";
+                }
+
+                try{
+                    return accountLoginResponse.ticket;
+                }
+                catch
+                {
+                    return "";
+                }
             }
         }
 
@@ -89,7 +104,25 @@ namespace FleepClient
             {
                 return apiURL;
             }
+            
+            set
+            {
+                if(value != "")
+                { 
+                    this.apiURL = value;
+                }
+            }
         }
+
+        public bool Connected
+        {
+            get
+            {
+                return ((this.TokenID != "") && (this.Ticket != ""));
+            }
+        }
+        
+        #endregion
 
         /// <summary>
         /// Login to the Service
@@ -131,6 +164,10 @@ namespace FleepClient
             }
             catch(Exception ex)
             {
+                // Explicity clear the TokenID and Ticket
+                this.accountLoginResponse = null;
+                this.accountLoginWebHeaderCollection = null;
+                
                 // Throw the exception
                 throw ex;
             }
