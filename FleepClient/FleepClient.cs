@@ -130,56 +130,30 @@ namespace Fleep
         /// <param name="Email">Login Email</param>
         /// <param name="Password">Login Password</param>
         /// <returns></returns>
-        public int AccountLogin(string Email, string Password)
+        public void AccountLogin(string Email, string Password)
         {
-            int returnValue;
-            Account_LoginRequest accountLoginRequest;
-            
             try
-            {             
-                using (WebClient client = new WebClient())
-                {
-                    
-                    accountLoginRequest = new Account_LoginRequest();
+            {
+                Account_LoginRequest accountLoginRequest = new Account_LoginRequest();
 
-                    // Set Email and Password for credentials
-                    accountLoginRequest.email = Email;
-                    accountLoginRequest.password = Password;
+                // Set Email and Password for credentials
+                accountLoginRequest.email = Email;
+                accountLoginRequest.password = Password;
 
-                    // Add the required default headers
-                    UtilityMethods.UtilityMethods.AddDefaultHeaders(client, this.TokenID);
+                //Create a fake fleepclient
 
-                    // Make the call via POST
-                    String response = client.UploadString(apiURL + accountLoginRequest.MethodPath, "POST", accountLoginRequest.ToJSON());
-
-                    // Save the Login Web Header Response for evaluation in the object
-                    accountLoginWebHeaderCollection = client.ResponseHeaders;
-                    
-                    // Deserialize the Reponse into a LoginResponse object
-                    accountLoginResponse = JsonConvert.DeserializeObject<Account_LoginResponse>(response.ToString());
-
-                }
-
-                returnValue = 0;
+                // Call the API
+                this.accountLoginResponse = FleepAPI.CallAPI<Account_LoginResponse>(this, accountLoginRequest.MethodPath, accountLoginRequest.ToJSON(),out accountLoginWebHeaderCollection);
             }
-            catch(Exception ex)
+            catch
             {
                 // Explicity clear the TokenID and Ticket
                 this.accountLoginResponse = null;
                 this.accountLoginWebHeaderCollection = null;
-                
+
                 // Throw the exception
-                throw ex;
+                throw;
             }
-
-            finally
-            {
-             // Do Nothing   
-            }
-
-            // Return the result value, should only be 0
-            return returnValue;
-            
         }
 
     }

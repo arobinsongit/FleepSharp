@@ -74,7 +74,7 @@ namespace Fleep.MethodClasses
         {
             get
             {
-                return "conversation/sync_backward/" + this.ConversationID;
+                return "conversation/sync/" + this.ConversationID;
             }
         }
         #endregion

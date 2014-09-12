@@ -5,6 +5,10 @@ using log4net.Config;
 using System.Collections.Generic;
 using System.Text;
 using System.Net;
+using System.Collections.Specialized;
+
+
+using Fleep.MethodClasses;
 
 namespace Fleep.TypeClasses
 {
@@ -24,21 +28,30 @@ namespace Fleep.TypeClasses
         {
             T returnValue;
             string response;
+            bool isAccountLogin;
             
-            if (!client.Connected)
-            {
-                throw new Exceptions.NotLoggedInException();
-            }
-
             try
             {
                 using (WebClient wc = new WebClient())
                 {
+
+                    //Figure out if this is an account login
+                    isAccountLogin = (typeof(Account_LoginResponse).IsAssignableFrom(typeof(T)));
+
+                    // If this is not a login attempt then check the connection and add the ticket
+                    if (!isAccountLogin)               
+                    {
+                        if (!client.Connected)
+                        {
+                            throw new Exceptions.NotLoggedInException();
+                        }
+
+                        // Add the Ticket
+                        inputJSON = UpdateTicketinJSON(client, inputJSON);
+                    }
+
                     // Add the required default headers
                     AddDefaultHeaders(wc, client);
-
-                    // Add the Ticket
-                    inputJSON = UpdateTicketinJSON(client, inputJSON);
 
                     // Make the call via POST
                     response = wc.UploadString(client.ApiURL + callpath, "POST", inputJSON);
@@ -48,20 +61,72 @@ namespace Fleep.TypeClasses
                 }
 
                 returnValue = JsonConvert.DeserializeObject<T>(response);
+
+                // Return the result value, should only be 0
+                return returnValue;
             }
-            catch (Exception ex)
+            catch
             {
                 // Throw the exception
-                throw ex;
+                throw;
             }
+        }
 
-            finally
+        public static FileInfoList UploadFile(FleepClient client,string callpath, File_UploadRequest fileUploadRequest)
+        {
+            FileInfoList returnValue;
+            string response;
+            byte[] responseBytes;
+
+            NameValueCollection parameters;
+
+            //parameters.Add("value1", "123");
+            //parameters.Add("value2", "xyz");
+            //oWeb.QueryString = parameters;
+            //var responseBytes = oWeb.UploadFile("http://website.com/file.php", "path to file");
+            //string response = Encoding.ASCII.GetString(responseBytes);
+            
+            try
             {
-                // Do Nothing   
+                using (WebClient wc = new WebClient())
+                {
+
+            
+                        if (!client.Connected)
+                        {
+                            throw new Exceptions.NotLoggedInException();
+                        }
+
+                    // Add the Ticket
+                    parameters = new NameValueCollection();
+                    parameters.Add("ticket",client.Ticket);
+                    wc.QueryString = parameters;
+            
+                    // Add the required default headers
+                    AddDefaultHeaders(wc, client);
+
+                    // Make the call via POST
+                    responseBytes = wc.UploadFile(callpath, "POST", fileUploadRequest.filepath);
+                    response = Encoding.ASCII.GetString(responseBytes);
+                    
+                    // Save the Login Web Header Response for evaluation in the object
+                    //responseHeaderCollection = wc.ResponseHeaders;
+                }
+
+                //returnValue = JsonConvert.DeserializeObject<T>(response);
+
+                // Return the result value, should only be 0
+
+                returnValue = new FileInfoList();
+
+                return returnValue;
+            }
+            catch
+            {
+                // Throw the exception
+                throw;
             }
 
-            // Return the result value, should only be 0
-            return returnValue;
         }
 
         #region Utility Methods

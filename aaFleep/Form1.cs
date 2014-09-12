@@ -48,15 +48,13 @@ namespace aaFleep
 
             try
             {
-                fc = new Fleep.FleepClient("andy@phase2automation.com", "3EYrAJrPymCFzsdA");
+            fc = new Fleep.FleepClient("andy@phase2automation.com", "3EYrAJrPymCFzsdA");
 
             newConversation = new Conversation(fc);
 
             newConversation.ConversationCreate("ABC", "aprobi@gmail.com", "First Message 2");
 
             log("Created Conversation " + newConversation.ConversationID);
-
-
 
             //Message_SendResponse messageSendResponse;
 
@@ -83,14 +81,22 @@ namespace aaFleep
 
         private void btnSend_Click(object sender, EventArgs e)
         {
-            newConversation.MessageSend(textBox1.Text);
+            try
+            {
+                newConversation.MessageSend(textBox1.Text);
 
-            log("Last Message Sent = " + newConversation.LastMessageNumberSent);
+                log("Last Message Sent = " + newConversation.LastMessageNumberSent);
 
-            //log("Last Sync Backwards");
-            //newConversation.SyncBackward((BigInteger)1);
-            //log(newConversation.LastConversationSyncBackwardResponse.ToJSONPrint());
+                newConversation.Sync(10);
 
+                //log("Last Sync Backwards");
+                //newConversation.SyncBackward((BigInteger)1);
+                //log(newConversation.LastConversationSyncBackwardResponse.ToJSONPrint());
+            }
+            catch(Exception ex)
+            {
+                log(ex.ToString());
+            }
 
         }
 

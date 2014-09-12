@@ -9,7 +9,7 @@ using System.Numerics;
 namespace Fleep.MethodClasses
 {
     [JsonObject(MemberSerialization.OptOut)]
-    public class Message_SendResponse : PageAPIConversationSync
+    public class File_UploadResponse : PageAPIConversationSync
     {
         /*
          message/send

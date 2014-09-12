@@ -74,10 +74,10 @@ namespace Fleep.TypeClasses
 
         #region Properties
         
-        public string ConversationID { get; private set; }
+        public string ConversationID { get; set; }
         public Conversation_CreateResponse LastConversationCreateResponse { get { return this.lastConversationCreateResponse; }}
         public Message_SendResponse LastMessageSendResponse { get { return this.lastMessageSendResponse; }}        
-        public int LastMessageNumberSent { get { return lastMessageSendResponse.result_message_nr; } }
+        public BigInteger LastMessageNumberSent { get { return lastMessageSendResponse.result_message_nr; } }
         public Conversation_SyncBackwardResponse LastConversationSyncBackwardResponse { get { return this.lastConversationSyncBackwardResponse; }}
         
         #endregion
@@ -143,6 +143,32 @@ namespace Fleep.TypeClasses
 
                 // Call the API
                 this.lastConversationSyncBackwardResponse = FleepAPI.CallAPI<Conversation_SyncBackwardResponse>(fleepClient, conversationSyncBackwardRequest.MethodPath, conversationSyncBackwardRequest.ToJSON());
+            }
+            catch
+            {
+                // Throw the exception
+                throw;
+            }
+        }
+
+        public void Sync(BigInteger from_message_nr, string mkDirection = "")
+        {
+            
+            try
+            {
+                Conversation_SyncRequest conversationSyncRequest = new Conversation_SyncRequest();
+
+                // Set parameters on the request
+                conversationSyncRequest.ConversationID = this.ConversationID;
+                conversationSyncRequest.from_message_nr = from_message_nr;
+                conversationSyncRequest.mk_direction = mkDirection;
+
+                // Call the API
+
+                string response = FleepAPI.CallAPI<string>(fleepClient, conversationSyncRequest.MethodPath, conversationSyncRequest.ToJSON());
+
+                //this.lastConversationSyncBackwardResponse = FleepAPI.CallAPI<Conversation_SyncBackwardResponse>(fleepClient, conversationSyncBackwardRequest.MethodPath, conversationSyncBackwardRequest.ToJSON());
+                response = "";
             }
             catch
             {

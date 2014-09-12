@@ -9,16 +9,7 @@ namespace Fleep.UtilityMethods
 {
     public class UtilityMethods
     {
-        public static WebClient AddDefaultHeaders(WebClient client, string tokenID)
-        {
-            // Set the header to JSON
-            client.Headers.Add(HttpRequestHeader.ContentType, "application/json");
 
-            // Add the token
-            client.Headers.Add(HttpRequestHeader.Cookie, "token_id=" + tokenID);
-
-            return client;
-        }
     }
 
 }
