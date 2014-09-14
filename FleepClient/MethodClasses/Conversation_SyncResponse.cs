@@ -55,7 +55,7 @@ namespace Fleep.MethodClasses
         hook_info           dict            - hook created by this api call
         */
 
-        #region "Outputs"
+        #region Outputs
 
         public BigInteger result_message_nr { get; set; }
         
@@ -64,13 +64,13 @@ namespace Fleep.MethodClasses
 
         #endregion
 
-        #region "Constructors"
+        #region Constructors
 
         // No constructors
 
         #endregion
 
-        #region "JSON Methods"
+        #region JSON Methods
 
         #endregion
 

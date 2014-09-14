@@ -10,7 +10,7 @@ namespace Fleep.TypeClasses
     [JsonObject(MemberSerialization.OptOut)]
     public class FleepTypeBase
     {
-        #region "JSON Methods"
+        #region JSON Methods
         
         public string ToJSON()
         {

@@ -27,7 +27,7 @@ namespace Fleep.MethodClasses
         stream              list            - see account/poll for stream record definitions
         */
 
-        #region "Inputs"
+        #region Inputs
 
         [JsonProperty]
         public BigInteger from_message_nr { get; set; }
@@ -36,7 +36,7 @@ namespace Fleep.MethodClasses
 
         #endregion
 
-        #region "Utility Properties"
+        #region Utility Properties
         /// <summary>
         /// Path to method on API
         /// </summary>
@@ -49,7 +49,7 @@ namespace Fleep.MethodClasses
         }
         #endregion
 
-        #region "JSON Methods"
+        #region JSON Methods
 
         #endregion
 

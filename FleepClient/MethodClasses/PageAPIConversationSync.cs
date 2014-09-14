@@ -11,20 +11,20 @@ namespace Fleep.MethodClasses
     [JsonObject(MemberSerialization.OptOut)]
     public class PageAPIConversationSync : MethodResponseBase
     {
-        #region "Outputs"
+        #region Outputs
 
         public PageAPIConversationSyncHeader header { get; set; }
         public List<PageAPIConversationSyncStream> stream { get; set; }
 
         #endregion
 
-        #region "Constructors"
+        #region Constructors
 
         // No constructors
 
         #endregion
 
-        #region "JSON Methods"
+        #region JSON Methods
 
         #endregion
 

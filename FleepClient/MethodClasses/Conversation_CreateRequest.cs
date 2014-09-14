@@ -33,7 +33,7 @@ namespace Fleep.MethodClasses
         To all connections of all the members of this conversation.
         */
 
-        #region "Inputs"
+        #region Inputs
 
         [JsonProperty]
         public string topic { get; set; }
@@ -54,7 +54,7 @@ namespace Fleep.MethodClasses
 
         #endregion
 
-        #region "Utility Properties"
+        #region Utility Properties
         /// <summary>
         /// Path to method on API
         /// </summary>
@@ -67,7 +67,7 @@ namespace Fleep.MethodClasses
         }
         #endregion
 
-        #region "JSON Methods"
+        #region JSON Methods
 
         #endregion
 

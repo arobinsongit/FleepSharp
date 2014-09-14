@@ -42,19 +42,19 @@ namespace Fleep.MethodClasses
         To all connections of all the members of this conversation.
         */
 
-        #region "Outputs"
+        #region Outputs
 
         public BigInteger result_message_nr { get; set;}
 
         #endregion
 
-        #region "Constructors"
+        #region Constructors
 
         // No constructors
 
         #endregion
 
-        #region "JSON Methods"
+        #region JSON Methods
 
         #endregion
 

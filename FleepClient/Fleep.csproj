@@ -50,6 +50,8 @@
     <Compile Include="FleepClient.cs" />
     <Compile Include="Enumerations\enum.cs" />
     <Compile Include="Exceptions\NotLoggedInException.cs" />
+    <Compile Include="MethodClasses\Conversation_DeleteRequest.cs" />
+    <Compile Include="MethodClasses\Conversation_DeleteResponse.cs" />
     <Compile Include="MethodClasses\Conversation_SyncRequest.cs" />
     <Compile Include="MethodClasses\Conversation_SyncResponse.cs" />
     <Compile Include="MethodClasses\Conversation_SyncBackwardResponse.cs" />

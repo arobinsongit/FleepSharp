@@ -32,7 +32,7 @@ namespace Fleep.MethodClasses
                                               subsequent api calls
         */
 
-        #region "Outputs"
+        #region Outputs
 
         [JsonProperty]
         public string account_id { get; set; }
@@ -49,13 +49,13 @@ namespace Fleep.MethodClasses
         #endregion
 
         
-        #region "Constructors"
+        #region Constructors
 
         // No constructors
 
         #endregion
 
-        #region "JSON Methods"
+        #region JSON Methods
 
         #endregion
 

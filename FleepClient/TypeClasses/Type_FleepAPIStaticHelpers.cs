@@ -73,53 +73,30 @@ namespace Fleep.TypeClasses
         }
 
         public static FileInfoList UploadFile(FleepClient client,string callpath, File_UploadRequest fileUploadRequest)
-        {
-            FileInfoList returnValue;
-            string response;
-            byte[] responseBytes;
-
-            NameValueCollection parameters;
-
-            //parameters.Add("value1", "123");
-            //parameters.Add("value2", "xyz");
-            //oWeb.QueryString = parameters;
-            //var responseBytes = oWeb.UploadFile("http://website.com/file.php", "path to file");
-            //string response = Encoding.ASCII.GetString(responseBytes);
-            
+        {                      
             try
             {
                 using (WebClient wc = new WebClient())
                 {
-
-            
-                        if (!client.Connected)
-                        {
-                            throw new Exceptions.NotLoggedInException();
-                        }
+                    if (!client.Connected)
+                    {
+                        throw new Exceptions.NotLoggedInException();
+                    }
 
                     // Add the Ticket
-                    parameters = new NameValueCollection();
+                    NameValueCollection parameters = new NameValueCollection();
                     parameters.Add("ticket",client.Ticket);
                     wc.QueryString = parameters;
             
                     // Add the required default headers
                     AddDefaultHeaders(wc, client);
 
-                    // Make the call via POST
-                    responseBytes = wc.UploadFile(callpath, "POST", fileUploadRequest.filepath);
-                    response = Encoding.ASCII.GetString(responseBytes);
+                    // Make the call via PUT
+                    byte[] responseBytes = wc.UploadFile(client.ApiURL + callpath, "PUT", fileUploadRequest.filepath);
                     
-                    // Save the Login Web Header Response for evaluation in the object
-                    //responseHeaderCollection = wc.ResponseHeaders;
+                    // Return the Results 
+                    return JsonConvert.DeserializeObject<FileInfoList>(Encoding.ASCII.GetString(responseBytes));                   
                 }
-
-                //returnValue = JsonConvert.DeserializeObject<T>(response);
-
-                // Return the result value, should only be 0
-
-                returnValue = new FileInfoList();
-
-                return returnValue;
             }
             catch
             {
@@ -176,7 +153,7 @@ namespace Fleep.TypeClasses
 
         #endregion
 
-        #region "JSON Methods"
+        #region JSON Methods
 
         public string ToJSON()
         {

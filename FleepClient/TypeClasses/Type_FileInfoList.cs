@@ -9,6 +9,6 @@ namespace Fleep.TypeClasses
     [JsonObject(MemberSerialization.OptOut)]
     public class FileInfoList : FleepTypeBase
     {
-        public List<FileInfo> list { get; set; }
+        public List<FileInfo> files { get; set; }
     }
 }

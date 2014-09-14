@@ -9,21 +9,14 @@ using Fleep.Exceptions;
 namespace Fleep.MethodClasses
 {
     [JsonObject(MemberSerialization.OptOut)]
-    public class Conversation_CreateResponse : PageAPIConversationSync
+    public class Conversation_DeleteResponse : PageAPIConversationSync
     {
         /*
-        conversation/create
-        URL: https://fleep.io/api/conversation/create
+        conversation/delete
+        URL: https://fleep.io/api/conversation/delete/CONV_ID
 
-        Create new conversation
+        Delete conversation. Makes all content before given from_message_nr inaccessible. If you don’t leave conversation before deleting it will still reappear when someone writes here. Contents of pinboard and file drawer are not affected by this operation.
 
-        Input:
-
-        topic               text = None         - conversation topic
-        emails              text = None         - list of email addresses like on email To: line
-        message             text = None         - Initial message into the conversation
-        files               list = None         - list of files to be added to conversation
-        is_invite           boolean = None      - Send out invite emails to fresh fleepers
         Output:
 
         page_api_conversation_sync          - if from_message_nr is provided then normal
@@ -35,7 +28,7 @@ namespace Fleep.MethodClasses
         */
 
         #region Outputs
-        
+
         #endregion
 
         #region Constructors
@@ -47,9 +40,6 @@ namespace Fleep.MethodClasses
         #region JSON Methods
 
         #endregion
-
-
-
 
     }
 }

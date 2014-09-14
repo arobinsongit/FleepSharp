@@ -28,17 +28,17 @@ namespace Fleep.MethodClasses
 
         */
 
-        #region "Outputs"
+        #region Outputs
 
         #endregion
 
-        #region "Constructors"
+        #region Constructors
 
         // No constructors
 
         #endregion
 
-        #region "JSON Methods"
+        #region JSON Methods
 
         #endregion
 

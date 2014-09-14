@@ -25,6 +25,10 @@ namespace Fleep
         private Account_LoginResponse accountLoginResponse;
         private WebHeaderCollection accountLoginWebHeaderCollection;
 
+        // Allow for setting Token and Ticket externally without forcing login
+        private string tokenIDExternalSet = "";
+        private string ticketExternalSet = "";
+
         private string apiURL = "https://fleep.io/api/";
         private const int validHTTPStatus = 200;
 
@@ -49,8 +53,14 @@ namespace Fleep
                 string resultString = "";
                 string cookieString = "";
 
+                // If the external TokenID has been explicitly set then return this
+                if (tokenIDExternalSet != "")
+                {
+                    return tokenIDExternalSet;
+                }
+
                 // If header collection is null, bail with a blank
-                if(accountLoginWebHeaderCollection == null)
+                if (accountLoginWebHeaderCollection == null)
                 {
                     return "";
                 }
@@ -77,23 +87,46 @@ namespace Fleep
 
                 return resultString;
             }
+
+            set
+            {
+                if (value != "")
+                {
+                    tokenIDExternalSet = value;
+                }
+            }
         }
 
         public string Ticket
         {
             get
             {
+                //If the Ticket has been set externally then return that
+                if (ticketExternalSet != "")
+                {
+                    return ticketExternalSet;
+                }
+
                 if (accountLoginResponse == null)
                 {
                     return "";
                 }
 
-                try{
+                try
+                {
                     return accountLoginResponse.ticket;
                 }
                 catch
                 {
                     return "";
+                }
+            }
+
+            set
+            {
+                if (value != "")
+                {
+                    ticketExternalSet = value;
                 }
             }
         }
@@ -104,11 +137,11 @@ namespace Fleep
             {
                 return apiURL;
             }
-            
+
             set
             {
-                if(value != "")
-                { 
+                if (value != "")
+                {
                     this.apiURL = value;
                 }
             }
@@ -121,7 +154,7 @@ namespace Fleep
                 return ((this.TokenID != "") && (this.Ticket != ""));
             }
         }
-        
+
         #endregion
 
         /// <summary>
@@ -143,7 +176,7 @@ namespace Fleep
                 //Create a fake fleepclient
 
                 // Call the API
-                this.accountLoginResponse = FleepAPI.CallAPI<Account_LoginResponse>(this, accountLoginRequest.MethodPath, accountLoginRequest.ToJSON(),out accountLoginWebHeaderCollection);
+                this.accountLoginResponse = FleepAPI.CallAPI<Account_LoginResponse>(this, accountLoginRequest.MethodPath, accountLoginRequest.ToJSON(), out accountLoginWebHeaderCollection);
             }
             catch
             {
@@ -157,5 +190,4 @@ namespace Fleep
         }
 
     }
-
 }

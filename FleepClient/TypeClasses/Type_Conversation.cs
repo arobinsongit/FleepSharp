@@ -25,7 +25,9 @@ namespace Fleep.TypeClasses
 
         private Message_SendResponse lastMessageSendResponse;
         private Conversation_CreateResponse lastConversationCreateResponse;
+        private Conversation_DeleteResponse lastConversationDeleteResponse;
         private Conversation_SyncBackwardResponse lastConversationSyncBackwardResponse;
+        private Conversation_SyncResponse lastConversationSyncResponse;
 
         private BigInteger lastMessageNrFromSync = -1;
         
@@ -74,17 +76,52 @@ namespace Fleep.TypeClasses
 
         #region Properties
         
-        public string ConversationID { get; set; }
-        public Conversation_CreateResponse LastConversationCreateResponse { get { return this.lastConversationCreateResponse; }}
-        public Message_SendResponse LastMessageSendResponse { get { return this.lastMessageSendResponse; }}        
-        public BigInteger LastMessageNumberSent { get { return lastMessageSendResponse.result_message_nr; } }
-        public Conversation_SyncBackwardResponse LastConversationSyncBackwardResponse { get { return this.lastConversationSyncBackwardResponse; }}
+        public string ConversationID { get; private set; }
+        
+        public BigInteger LastMessageNumberSent 
+        { 
+            get {return (lastMessageSendResponse != null) ? lastMessageSendResponse.result_message_nr : -1;} 
+        }
+
+        public BigInteger LastMessageNrFromSync
+        { 
+            get { return (lastConversationSyncResponse != null) ? lastConversationSyncResponse.header.last_message_nr : -1; } 
+        }
+
+        public Conversation_CreateResponse LastConversationCreateResponse 
+        {
+            get { return this.lastConversationCreateResponse; } 
+        }
+
+        public Message_SendResponse LastMessageSendResponse 
+        { 
+            get { return this.lastMessageSendResponse; } 
+        }                
+
+        public Conversation_SyncBackwardResponse LastConversationSyncBackwardResponse 
+        { 
+            get { return this.lastConversationSyncBackwardResponse; }
+        }
+        
+        public Conversation_SyncResponse LastConversationSyncResponse
+        { 
+            get { return this.lastConversationSyncResponse; } 
+        }
         
         #endregion
 
         #region Methods
 
-        public void ConversationCreate(string topic, string emails, string message = "", bool is_invite = false)
+        /// <summary>
+        /// Allow a caller to instantiate a new conversation then explicity subscribe to a CONV ID that they know from a different method
+        /// </summary>
+        /// <param name="conversationID"></param>
+        public void Subscribe(string conversationID)
+        {
+            this.ConversationID = conversationID;
+        }
+
+        public Conversation_CreateResponse ConversationCreate(string topic, string emails, string message = "", bool is_invite = false)
         {
             try
             {
@@ -102,6 +139,9 @@ namespace Fleep.TypeClasses
 
                 //Capture the Conversation ID
                 this.ConversationID = this.lastConversationCreateResponse.header.conversation_id;
+
+                // Return Results
+                return this.lastConversationCreateResponse;
             }
 
             catch
@@ -111,7 +151,56 @@ namespace Fleep.TypeClasses
             }
         }
 
-        public void MessageSend(string message)
+        public Conversation_DeleteResponse ConversationDelete()
+        {
+            try
+            {
+                Conversation_DeleteRequest conversationDeleteRequest = new Conversation_DeleteRequest();
+
+                // Set parameters on the request
+                conversationDeleteRequest.ConversationID = this.ConversationID;
+
+                // Make the API CALL
+                this.lastConversationDeleteResponse = FleepAPI.CallAPI<Conversation_DeleteResponse>(fleepClient, conversationDeleteRequest.MethodPath, conversationDeleteRequest.ToJSON());
+
+                // Return Results
+                return this.lastConversationDeleteResponse;
+            }
+
+            catch
+            {
+                // Throw the exception
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// Static call for Conversation Delete
+        /// </summary>
+        /// <param name="fleepClient"></param>
+        /// <param name="conversationID"></param>
+        /// <returns></returns>
+        public static Conversation_DeleteResponse ConversationDelete(FleepClient fleepClient, string conversationID)
+        {
+            try
+            {
+                Conversation_DeleteRequest conversationDeleteRequest = new Conversation_DeleteRequest();
+
+                // Set parameters on the request
+                conversationDeleteRequest.ConversationID = conversationID;
+
+                // Make the API CALL
+                return FleepAPI.CallAPI<Conversation_DeleteResponse>(fleepClient, conversationDeleteRequest.MethodPath, conversationDeleteRequest.ToJSON());
+            }
+
+            catch
+            {
+                // Throw the exception
+                throw;
+            }
+        }
+
+        public Message_SendResponse MessageSend(string message)
         {            
             try
             {
@@ -123,6 +212,9 @@ namespace Fleep.TypeClasses
                 
                 // Call the API                  
                 this.lastMessageSendResponse = FleepAPI.CallAPI<Message_SendResponse>(fleepClient, messageSendRequest.MethodPath, messageSendRequest.ToJSON());               
+
+                // Return Result
+                return this.lastMessageSendResponse;
             }
             catch
             {
@@ -131,7 +223,7 @@ namespace Fleep.TypeClasses
             }
         }
 
-        public void SyncBackward(BigInteger from_message_nr)
+        public Conversation_SyncBackwardResponse SyncBackward(BigInteger from_message_nr)
         {
             try
             {
@@ -143,6 +235,9 @@ namespace Fleep.TypeClasses
 
                 // Call the API
                 this.lastConversationSyncBackwardResponse = FleepAPI.CallAPI<Conversation_SyncBackwardResponse>(fleepClient, conversationSyncBackwardRequest.MethodPath, conversationSyncBackwardRequest.ToJSON());
+
+                // Return Result
+                return this.lastConversationSyncBackwardResponse;
             }
             catch
             {
@@ -151,7 +246,13 @@ namespace Fleep.TypeClasses
             }
         }
 
-        public void Sync(BigInteger from_message_nr, string mkDirection = "")
+        public Conversation_SyncResponse Sync()
+        {
+            // Sync all Messages
+            return this.Sync(0);
+        }
+
+        public Conversation_SyncResponse Sync(BigInteger from_message_nr, string mkDirection = "")
         {
             
             try
@@ -164,17 +265,22 @@ namespace Fleep.TypeClasses
                 conversationSyncRequest.mk_direction = mkDirection;
 
                 // Call the API
-
-                string response = FleepAPI.CallAPI<string>(fleepClient, conversationSyncRequest.MethodPath, conversationSyncRequest.ToJSON());
-
-                //this.lastConversationSyncBackwardResponse = FleepAPI.CallAPI<Conversation_SyncBackwardResponse>(fleepClient, conversationSyncBackwardRequest.MethodPath, conversationSyncBackwardRequest.ToJSON());
-                response = "";
+                this.lastConversationSyncResponse = FleepAPI.CallAPI<Conversation_SyncResponse>(fleepClient, conversationSyncRequest.MethodPath, conversationSyncRequest.ToJSON());
+                
+                // Return Results
+                return this.lastConversationSyncResponse;
             }
             catch
             {
                 // Throw the exception
                 throw;
             }
+        }
+
+        public Conversation_SyncResponse SyncSinceLast()
+        {
+            // Sync all messages since the last message we know we read
+            return this.Sync(this.LastMessageNrFromSync);
         }
 
         #endregion

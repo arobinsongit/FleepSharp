@@ -11,13 +11,15 @@ namespace Fleep.TypeClasses
     public class FileInfo : FleepTypeBase
     {
         /*
+         * ISSUE - I think the description from this documentation is incorrect
+         * 
         file_id             uuid            - file id received from upload
         width               bigint = None   - picure width in pixels
         height              bigint = None   - pictre width in pixels
         */
 
         public string file_id { get; set; }
-        public BigInteger width { get; set; }
-        public BigInteger height { get; set; }
+        public string name { get; set; }
+        public int size { get; set; }
     }
 }

@@ -11,7 +11,6 @@ using Fleep.UtilityMethods;
 
 using System.Net;
 
-
 namespace Fleep.TypeClasses
 {
     [JsonObject(MemberSerialization.OptOut)]
@@ -70,16 +69,12 @@ namespace Fleep.TypeClasses
         #region Properties
         
         public string ConversationID { get; set; }
-        //public Conversation_CreateResponse LastConversationCreateResponse { get { return this.lastConversationCreateResponse; }}
-        //public Message_SendResponse LastMessageSendResponse { get { return this.lastMessageSendResponse; }}        
-        //public BigInteger LastMessageNumberSent { get { return lastMessageSendResponse.result_message_nr; } }
-        //public Conversation_SyncBackwardResponse LastConversationSyncBackwardResponse { get { return this.lastConversationSyncBackwardResponse; }}
         
         #endregion
 
         #region Methods
 
-        public void FileUpload(string filepath)
+        public FileInfoList FileUpload(string filepath, string conversationID)
         {
             try
             {
@@ -88,9 +83,10 @@ namespace Fleep.TypeClasses
 
                 // Set parameters on the request
                 fileUploadRequest.filepath = filepath;
+                fileUploadRequest.ConversationID = conversationID;
 
                 // Make the API CALL
-                fileInfoList = FleepAPI.UploadFile(this.fleepClient, fileUploadRequest.MethodPath, fileUploadRequest);
+                return FleepAPI.UploadFile(this.fleepClient, fileUploadRequest.MethodPath, fileUploadRequest);
 
             }
 
