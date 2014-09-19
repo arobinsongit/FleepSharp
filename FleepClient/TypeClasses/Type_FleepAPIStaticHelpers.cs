@@ -15,16 +15,16 @@ namespace Fleep.TypeClasses
     [JsonObject(MemberSerialization.OptOut)]
     public class FleepAPI
     {
-        public static T CallAPI<T>(FleepClient client,string callpath, string inputJSON)
+        public static T CallAPI<T>(Account account,string callpath, string inputJSON)
         {
             // Special call to just eat the response if the caller does not want it.
             // This is required b/c you can not have optional OUT parms on a function
             WebHeaderCollection responseEater;
 
-            return CallAPI<T>(client, callpath, inputJSON, out responseEater);
+            return CallAPI<T>(account, callpath, inputJSON, out responseEater);
         }
 
-        public static T CallAPI<T>(FleepClient client, string callpath, string inputJSON, out WebHeaderCollection responseHeaderCollection)
+        public static T CallAPI<T>(Account account, string callpath, string inputJSON, out WebHeaderCollection responseHeaderCollection)
         {
             T returnValue;
             string response;
@@ -41,20 +41,20 @@ namespace Fleep.TypeClasses
                     // If this is not a login attempt then check the connection and add the ticket
                     if (!isAccountLogin)               
                     {
-                        if (!client.Connected)
+                        if (!account.Connected)
                         {
                             throw new Exceptions.NotLoggedInException();
                         }
 
                         // Add the Ticket
-                        inputJSON = UpdateTicketinJSON(client, inputJSON);
+                        inputJSON = UpdateTicketinJSON(account, inputJSON);
                     }
 
                     // Add the required default headers
-                    AddDefaultHeaders(wc, client);
+                    AddDefaultHeaders(wc, account);
 
                     // Make the call via POST
-                    response = wc.UploadString(client.ApiURL + callpath, "POST", inputJSON);
+                    response = wc.UploadString(account.ApiURL + callpath, "POST", inputJSON);
 
                     // Save the Login Web Header Response for evaluation in the object
                     responseHeaderCollection = wc.ResponseHeaders;
@@ -72,30 +72,45 @@ namespace Fleep.TypeClasses
             }
         }
 
-        public static FileInfoList UploadFile(FleepClient client,string callpath, File_UploadRequest fileUploadRequest)
+        public static File_UploadResponse UploadFile(Account account, File_UploadRequest fileUploadRequest)
         {                      
             try
-            {
+            {                
+                File_UploadResponse fileUploadResponse;
+                File_RenameResponse fileRenameResponse;
+
                 using (WebClient wc = new WebClient())
                 {
-                    if (!client.Connected)
+                    if (!account.Connected)
                     {
                         throw new Exceptions.NotLoggedInException();
                     }
 
                     // Add the Ticket
                     NameValueCollection parameters = new NameValueCollection();
-                    parameters.Add("ticket",client.Ticket);
+                    parameters.Add("ticket",account.Ticket);
                     wc.QueryString = parameters;
             
                     // Add the required default headers
-                    AddDefaultHeaders(wc, client);
+                    AddDefaultHeaders(wc, account);
 
                     // Make the call via PUT
-                    byte[] responseBytes = wc.UploadFile(client.ApiURL + callpath, "PUT", fileUploadRequest.filepath);
-                    
+                    byte[] responseBytes = wc.UploadFile(account.ApiURL + fileUploadRequest.MethodPath, "PUT", fileUploadRequest.filepath);
+
+                    // Deserialize the Results
+                    fileUploadResponse = JsonConvert.DeserializeObject<File_UploadResponse>(Encoding.ASCII.GetString(responseBytes));              
+
+                    //Force a rename
+                    File_RenameRequest fileRenameRequest = new File_RenameRequest();
+                    fileRenameRequest.ConversationID = fileUploadRequest.ConversationID;
+
+                    fileRenameRequest.file_id = fileUploadResponse.files[0].file_id;
+                    fileRenameRequest.file_name = fileUploadRequest.filename;
+                    fileRenameResponse = CallAPI<File_RenameResponse>(account, fileRenameRequest.MethodPath, fileRenameRequest.ToJSON());
+
                     // Return the Results 
-                    return JsonConvert.DeserializeObject<FileInfoList>(Encoding.ASCII.GetString(responseBytes));                   
+                    return fileUploadResponse;
+                    
                 }
             }
             catch
@@ -113,12 +128,12 @@ namespace Fleep.TypeClasses
         /// </summary>
         /// <param name="client"></param>
         /// <param name="workingJSON"></param>
-        private static string UpdateTicketinJSON(FleepClient client, string inputJSON)
+        private static string UpdateTicketinJSON(Account account, string inputJSON)
         {
             try
             {
                 var results = JsonConvert.DeserializeObject<dynamic>(inputJSON);
-                results.ticket = client.Ticket;
+                results.ticket = account.Ticket;
                 return JsonConvert.SerializeObject(results);
             }
             catch
@@ -133,7 +148,7 @@ namespace Fleep.TypeClasses
         /// <param name="client"></param>
         /// <param name="tokenID"></param>
         /// <returns></returns>
-        private static WebClient AddDefaultHeaders(WebClient wc, FleepClient client)
+        private static WebClient AddDefaultHeaders(WebClient wc, Account account)
         {
             try
             {
@@ -141,7 +156,7 @@ namespace Fleep.TypeClasses
                 wc.Headers.Add(HttpRequestHeader.ContentType, "application/json");
 
                 // Add the token
-                wc.Headers.Add(HttpRequestHeader.Cookie, "token_id=" + client.TokenID);
+                wc.Headers.Add(HttpRequestHeader.Cookie, "token_id=" + account.TokenID);
 
                 return wc;
             }

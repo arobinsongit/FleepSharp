@@ -18,10 +18,8 @@ namespace Fleep.TypeClasses
     {
         #region Declarations
         
-        private FleepClient fleepClient;
-
+        private Account account;
         private File_UploadResponse lastFileUploadResponse;
-
         
         #endregion
 
@@ -32,14 +30,14 @@ namespace Fleep.TypeClasses
             this.Initialize();
         }
 
-        public File(FleepClient client)
+        public File(Account account)
         {
-            this.Initialize(client);
+            this.Initialize(account);
         }
 
-        public File(FleepClient client, string topic, string emails, string message = "", bool is_invite = false)
+        public File(Account account, string topic, string emails, string message = "", bool is_invite = false)
         {
-            this.Initialize(client, topic, emails, message, is_invite);
+            this.Initialize(account, topic, emails, message, is_invite);
         }
 
 #endregion
@@ -51,15 +49,15 @@ namespace Fleep.TypeClasses
             //Empty initializer
         }
 
-        private void Initialize(FleepClient client)
+        private void Initialize(Account account)
         {
-            this.fleepClient = client;
+            this.account = account;
             this.Initialize();
         }
 
-        private void Initialize(FleepClient client, string topic, string emails, string message = "", bool is_invite = false)
+        private void Initialize(Account account, string topic, string emails, string message = "", bool is_invite = false)
         {         
-            this.fleepClient = client;
+            this.account = account;
             //this.ConversationCreate(topic, emails, message, is_invite);
             this.Initialize();
         }
@@ -74,7 +72,7 @@ namespace Fleep.TypeClasses
 
         #region Methods
 
-        public FileInfoList FileUpload(string filepath, string conversationID)
+        public File_UploadResponse FileUpload(string filepath, string conversationID)
         {
             try
             {
@@ -83,10 +81,10 @@ namespace Fleep.TypeClasses
 
                 // Set parameters on the request
                 fileUploadRequest.filepath = filepath;
-                fileUploadRequest.ConversationID = conversationID;
+                fileUploadRequest.ConversationID = conversationID;                
 
                 // Make the API CALL
-                return FleepAPI.UploadFile(this.fleepClient, fileUploadRequest.MethodPath, fileUploadRequest);
+                return FleepAPI.UploadFile(this.account, fileUploadRequest);
 
             }
 
@@ -96,7 +94,6 @@ namespace Fleep.TypeClasses
                 throw;
             }
         }
-
       
         #endregion
 

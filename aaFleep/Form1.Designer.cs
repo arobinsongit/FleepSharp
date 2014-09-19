@@ -45,6 +45,8 @@
             this.button6 = new System.Windows.Forms.Button();
             this.button7 = new System.Windows.Forms.Button();
             this.txtConvID = new System.Windows.Forms.TextBox();
+            this.txtFileID = new System.Windows.Forms.TextBox();
+            this.btnSendFile = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // button1
@@ -191,11 +193,30 @@
             this.txtConvID.Size = new System.Drawing.Size(201, 20);
             this.txtConvID.TabIndex = 15;
             // 
+            // txtFileID
+            // 
+            this.txtFileID.Location = new System.Drawing.Point(106, 145);
+            this.txtFileID.Name = "txtFileID";
+            this.txtFileID.Size = new System.Drawing.Size(310, 20);
+            this.txtFileID.TabIndex = 17;
+            // 
+            // btnSendFile
+            // 
+            this.btnSendFile.Location = new System.Drawing.Point(13, 142);
+            this.btnSendFile.Name = "btnSendFile";
+            this.btnSendFile.Size = new System.Drawing.Size(75, 23);
+            this.btnSendFile.TabIndex = 16;
+            this.btnSendFile.Text = "Send File";
+            this.btnSendFile.UseVisualStyleBackColor = true;
+            this.btnSendFile.Click += new System.EventHandler(this.btnSendFile_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(782, 485);
+            this.Controls.Add(this.txtFileID);
+            this.Controls.Add(this.btnSendFile);
             this.Controls.Add(this.txtConvID);
             this.Controls.Add(this.button7);
             this.Controls.Add(this.button6);
@@ -240,6 +261,8 @@
         private System.Windows.Forms.Button button6;
         private System.Windows.Forms.Button button7;
         private System.Windows.Forms.TextBox txtConvID;
+        private System.Windows.Forms.TextBox txtFileID;
+        private System.Windows.Forms.Button btnSendFile;
     }
 }
 

@@ -30,6 +30,7 @@ namespace aaFleep
     {
 
         private Fleep.FleepClient fc;
+        
         private string ConversationID;
         Conversation newConversation;
 
@@ -198,7 +199,7 @@ namespace aaFleep
             foreach(string ConvID in ConvIDList)
             {
                 log("Deleting " + ConvID);
-                Conversation.ConversationDelete(fc, ConvID);
+                Conversation.ConversationDelete(fc.Account, ConvID);
                 
             }
 
@@ -208,7 +209,7 @@ namespace aaFleep
         private void button6_Click(object sender, System.EventArgs e)
         {
             Stopwatch s = Stopwatch.StartNew();
-            newConversation = new Conversation(fc);
+            newConversation = new Conversation(fc.Account);
             newConversation.ConversationCreate(txtConvTopic.Text, "aprobi@gmail.com");
             log("Created Conversation " + newConversation.ConversationID);
             txtConvID.Text = newConversation.ConversationID;
@@ -281,13 +282,16 @@ namespace aaFleep
             try
             {
                 Stopwatch s = Stopwatch.StartNew();
-                Fleep.TypeClasses.File f = new Fleep.TypeClasses.File(fc);
-                FileInfoList fl;
+                Fleep.TypeClasses.File f = new Fleep.TypeClasses.File(fc.Account);
+                File_UploadResponse fl;
 
                 fl = f.FileUpload(txtFilename.Text,txtConvID.Text);
 
                 txtLog.Text = "";
                 log(fl.ToJSONPrint());
+
+                txtFileID.Text = fl.files[0].file_id;
+
                 et(s);
 
             }
@@ -296,6 +300,29 @@ namespace aaFleep
                 log(ex.ToString());
             }
 
+        }
+
+        private void btnSendFile_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                Stopwatch s = Stopwatch.StartNew();
+
+                List<string> file_ids;
+                file_ids = new List<string> { txtFileID.Text };
+                
+                //file_ids.Add(txtFileID.Text);
+
+                newConversation.MessageSend("File",file_ids);
+
+                log("Last Message Sent = " + newConversation.LastMessageNumberSent);
+
+                et(s);
+            }
+            catch (Exception ex)
+            {
+                log(ex.ToString());
+            }
         }
 
     }

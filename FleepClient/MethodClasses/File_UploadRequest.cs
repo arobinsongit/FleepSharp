@@ -36,17 +36,6 @@ namespace Fleep.MethodClasses
 
         #region Inputs
 
-        //[JsonProperty]
-        //public string message { get; set; }
-
-        //[JsonProperty]
-        //public BigInteger from_message_nr { get; set; }
-
-        //[JsonProperty]
-        //public List<string> file_ids { get; set; }
-        
-        //public FileInfoList files { get; set; }
-
         public string filepath { get; set; }
 
         public string ConversationID { get; set; }
@@ -64,6 +53,15 @@ namespace Fleep.MethodClasses
                 return "file/upload/" + this.ConversationID;
             }
         }
+
+        public string filename
+        {
+            get
+            {
+                return System.IO.Path.GetFileName(this.filepath);
+            }
+        }
+
         #endregion
 
         #region JSON Methods

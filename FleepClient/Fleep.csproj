@@ -50,13 +50,17 @@
     <Compile Include="FleepClient.cs" />
     <Compile Include="Enumerations\enum.cs" />
     <Compile Include="Exceptions\NotLoggedInException.cs" />
+    <Compile Include="MethodClasses\Account_PollRequest.cs" />
+    <Compile Include="MethodClasses\Account_PollResponse.cs" />
     <Compile Include="MethodClasses\Conversation_DeleteRequest.cs" />
     <Compile Include="MethodClasses\Conversation_DeleteResponse.cs" />
     <Compile Include="MethodClasses\Conversation_SyncRequest.cs" />
     <Compile Include="MethodClasses\Conversation_SyncResponse.cs" />
     <Compile Include="MethodClasses\Conversation_SyncBackwardResponse.cs" />
     <Compile Include="MethodClasses\Conversation_SyncBackwardRequest.cs" />
+    <Compile Include="MethodClasses\File_RenameRequest.cs" />
     <Compile Include="MethodClasses\File_UploadRequest.cs" />
+    <Compile Include="MethodClasses\File_RenameResponse.cs" />
     <Compile Include="MethodClasses\File_UploadResponse.cs" />
     <Compile Include="MethodClasses\Message_SendResponse.cs" />
     <Compile Include="MethodClasses\Message_SendRequest.cs" />
@@ -68,6 +72,7 @@
     <Compile Include="MethodClasses\MethodRequestBase.cs" />
     <Compile Include="MethodClasses\Account_LoginRequest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TypeClasses\Type_Account.cs" />
     <Compile Include="TypeClasses\Type_File.cs" />
     <Compile Include="TypeClasses\Type_FileInfoList.cs" />
     <Compile Include="TypeClasses\Type_FileInfo.cs" />

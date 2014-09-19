@@ -25,6 +25,8 @@ namespace Fleep
         private Account_LoginResponse accountLoginResponse;
         private WebHeaderCollection accountLoginWebHeaderCollection;
 
+        private Account account = new Account();
+
         // Allow for setting Token and Ticket externally without forcing login
         private string tokenIDExternalSet = "";
         private string ticketExternalSet = "";
@@ -41,7 +43,7 @@ namespace Fleep
 
         public FleepClient(string email, string password)
         {
-            this.AccountLogin(email, password);
+            this.Login(email, password);
         }
 
         #region Properties
@@ -50,49 +52,14 @@ namespace Fleep
         {
             get
             {
-                string resultString = "";
-                string cookieString = "";
-
-                // If the external TokenID has been explicitly set then return this
-                if (tokenIDExternalSet != "")
-                {
-                    return tokenIDExternalSet;
-                }
-
-                // If header collection is null, bail with a blank
-                if (accountLoginWebHeaderCollection == null)
-                {
-                    return "";
-                }
-
-                // Get the cookies from the header.  Return blank if it fails
-                try
-                {
-                    cookieString = accountLoginWebHeaderCollection.Get("Set-Cookie");
-                }
-                catch
-                {
-                    return "";
-                }
-
-                try
-                {
-                    // Pick out token_id and trim the trailing ; b/c I'm not smart enough to figure out regex to exclude :-)
-                    resultString = Regex.Match(cookieString, "token_id=(?<token_id>.*?);").Groups["token_id"].Value.TrimEnd(';');
-                }
-                catch
-                {
-                    return "";
-                }
-
-                return resultString;
+                return account.TokenID;
             }
 
             set
             {
                 if (value != "")
                 {
-                    tokenIDExternalSet = value;
+                    account.TokenID = value;
                 }
             }
         }
@@ -101,32 +68,38 @@ namespace Fleep
         {
             get
             {
-                //If the Ticket has been set externally then return that
-                if (ticketExternalSet != "")
-                {
-                    return ticketExternalSet;
-                }
-
-                if (accountLoginResponse == null)
-                {
-                    return "";
-                }
-
-                try
-                {
-                    return accountLoginResponse.ticket;
-                }
-                catch
-                {
-                    return "";
-                }
+                return account.Ticket;
             }
 
             set
             {
                 if (value != "")
                 {
-                    ticketExternalSet = value;
+                    account.Ticket = value;
+                }
+            }
+        }
+
+        public bool Connected
+        {
+            get
+            {
+                return account.Connected;
+            }
+        }
+
+        public Account Account
+        {
+            get
+            {
+               return this.account;
+            }
+
+            set
+            {
+                if (value != null)
+                {
+                    this.account = value;
                 }
             }
         }
@@ -147,36 +120,21 @@ namespace Fleep
             }
         }
 
-        public bool Connected
-        {
-            get
-            {
-                return ((this.TokenID != "") && (this.Ticket != ""));
-            }
-        }
-
         #endregion
 
         /// <summary>
         /// Login to the Service
         /// </summary>
-        /// <param name="Email">Login Email</param>
+        /// <param name="email">Login email</param>
         /// <param name="Password">Login Password</param>
         /// <returns></returns>
-        public void AccountLogin(string Email, string Password)
+        public bool Login(string email, string password)
         {
             try
             {
-                Account_LoginRequest accountLoginRequest = new Account_LoginRequest();
-
-                // Set Email and Password for credentials
-                accountLoginRequest.email = Email;
-                accountLoginRequest.password = Password;
-
-                //Create a fake fleepclient
-
-                // Call the API
-                this.accountLoginResponse = FleepAPI.CallAPI<Account_LoginResponse>(this, accountLoginRequest.MethodPath, accountLoginRequest.ToJSON(), out accountLoginWebHeaderCollection);
+                account.ApiURL = this.ApiURL;
+                account.Login(email, password);
+                return account.Connected;
             }
             catch
             {
@@ -188,6 +146,8 @@ namespace Fleep
                 throw;
             }
         }
+
+        
 
     }
 }

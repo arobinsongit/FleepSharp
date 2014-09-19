@@ -8,7 +8,6 @@ using Fleep.MethodClasses;
 using Fleep.TypeClasses;
 using Fleep.Exceptions;
 using Fleep.UtilityMethods;
-
 using System.Net;
 
 
@@ -19,9 +18,10 @@ namespace Fleep.TypeClasses
     [JsonObject(MemberSerialization.OptOut)]
     public class Conversation : FleepTypeBase
     {
+
         #region Declarations
-        
-        private FleepClient fleepClient;
+
+        private Account account;
 
         private Message_SendResponse lastMessageSendResponse;
         private Conversation_CreateResponse lastConversationCreateResponse;
@@ -40,14 +40,14 @@ namespace Fleep.TypeClasses
             this.Initialize();
         }
 
-        public Conversation(FleepClient client)
+        public Conversation(Account account)
         {
-            this.Initialize(client);
+            this.Initialize(account);
         }
 
-        public Conversation(FleepClient client, string topic, string emails, string message = "",bool is_invite = false)
+        public Conversation(Account account, string topic, string emails, string message = "",bool is_invite = false)
         {
-            this.Initialize(client, topic, emails, message, is_invite);
+            this.Initialize(account, topic, emails, message, is_invite);
         }
 
 #endregion
@@ -59,15 +59,15 @@ namespace Fleep.TypeClasses
             //Empty initializer
         }
 
-        private void Initialize(FleepClient client)
+        private void Initialize(Account account)
         {
-            this.fleepClient = client;
+            this.account = account;
             this.Initialize();
         }
 
-        private void Initialize(FleepClient client, string topic, string emails, string message = "", bool is_invite = false)
+        private void Initialize(Account account, string topic, string emails, string message = "", bool is_invite = false)
         {         
-            this.fleepClient = client;
+            this.account = account;
             this.ConversationCreate(topic, emails, message, is_invite);
             this.Initialize();
         }
@@ -135,7 +135,7 @@ namespace Fleep.TypeClasses
                 //TODO conversationCreateRequest.files = files;
 
                 // Make the API CALL
-                this.lastConversationCreateResponse = FleepAPI.CallAPI<Conversation_CreateResponse>(fleepClient, conversationCreateRequest.MethodPath, conversationCreateRequest.ToJSON());
+                this.lastConversationCreateResponse = FleepAPI.CallAPI<Conversation_CreateResponse>(account, conversationCreateRequest.MethodPath, conversationCreateRequest.ToJSON());
 
                 //Capture the Conversation ID
                 this.ConversationID = this.lastConversationCreateResponse.header.conversation_id;
@@ -161,7 +161,7 @@ namespace Fleep.TypeClasses
                 conversationDeleteRequest.ConversationID = this.ConversationID;
 
                 // Make the API CALL
-                this.lastConversationDeleteResponse = FleepAPI.CallAPI<Conversation_DeleteResponse>(fleepClient, conversationDeleteRequest.MethodPath, conversationDeleteRequest.ToJSON());
+                this.lastConversationDeleteResponse = FleepAPI.CallAPI<Conversation_DeleteResponse>(account, conversationDeleteRequest.MethodPath, conversationDeleteRequest.ToJSON());
 
                 // Return Results
                 return this.lastConversationDeleteResponse;
@@ -180,7 +180,7 @@ namespace Fleep.TypeClasses
         /// <param name="fleepClient"></param>
         /// <param name="conversationID"></param>
         /// <returns></returns>
-        public static Conversation_DeleteResponse ConversationDelete(FleepClient fleepClient, string conversationID)
+        public static Conversation_DeleteResponse ConversationDelete(Account account, string conversationID)
         {
             try
             {
@@ -190,7 +190,7 @@ namespace Fleep.TypeClasses
                 conversationDeleteRequest.ConversationID = conversationID;
 
                 // Make the API CALL
-                return FleepAPI.CallAPI<Conversation_DeleteResponse>(fleepClient, conversationDeleteRequest.MethodPath, conversationDeleteRequest.ToJSON());
+                return FleepAPI.CallAPI<Conversation_DeleteResponse>(account, conversationDeleteRequest.MethodPath, conversationDeleteRequest.ToJSON());
             }
 
             catch
@@ -200,18 +200,15 @@ namespace Fleep.TypeClasses
             }
         }
 
-        public Message_SendResponse MessageSend(string message)
-        {            
+
+        #region MessageSend
+        
+        public Message_SendResponse MessageSend(Message_SendRequest messageSendRequest)
+        {
             try
             {
-                Message_SendRequest messageSendRequest = new Message_SendRequest();
-
-                // Set parameters on the request
-                messageSendRequest.ConversationID = this.ConversationID;
-                messageSendRequest.message = message;
-                
                 // Call the API                  
-                this.lastMessageSendResponse = FleepAPI.CallAPI<Message_SendResponse>(fleepClient, messageSendRequest.MethodPath, messageSendRequest.ToJSON());               
+                this.lastMessageSendResponse = FleepAPI.CallAPI<Message_SendResponse>(account, messageSendRequest.MethodPath, messageSendRequest.ToJSON());
 
                 // Return Result
                 return this.lastMessageSendResponse;
@@ -221,7 +218,89 @@ namespace Fleep.TypeClasses
                 // Throw the exception
                 throw;
             }
+
         }
+
+        public Message_SendResponse MessageSend(string message, BigInteger from_message_nr = new BigInteger())
+        {
+            try
+            {
+                Message_SendRequest messageSendRequest = new Message_SendRequest();
+
+                // Set parameters on the request
+                messageSendRequest.ConversationID = this.ConversationID;
+                messageSendRequest.message = message;
+
+                if (from_message_nr > 0)
+                {
+                    messageSendRequest.from_message_nr = from_message_nr;
+                }
+
+                // Call internal function
+                return this.MessageSend(messageSendRequest);
+            }
+            catch
+            {
+                // Throw the exception
+                throw;
+            }
+        }
+
+        public Message_SendResponse MessageSend(string message, List<string> file_ids, BigInteger from_message_nr = new BigInteger())
+        {
+            try
+            {
+                Message_SendRequest messageSendRequest = new Message_SendRequest();
+
+                // Set parameters on the request
+                messageSendRequest.ConversationID = this.ConversationID;
+                messageSendRequest.message = message;
+                messageSendRequest.file_ids = file_ids;
+
+                if(from_message_nr > 0)
+                {
+                    messageSendRequest.from_message_nr = from_message_nr;
+                }
+
+
+                // Call internal function
+                return this.MessageSend(messageSendRequest);
+            }
+            catch
+            {
+                // Throw the exception
+                throw;
+            }
+        }
+
+        public Message_SendResponse MessageSend(string message, FileInfoList files, BigInteger from_message_nr = new BigInteger())
+        {
+            try
+            {
+                Message_SendRequest messageSendRequest = new Message_SendRequest();
+
+                // Set parameters on the request
+                messageSendRequest.ConversationID = this.ConversationID;
+                messageSendRequest.message = message;
+                messageSendRequest.files = files;
+
+                if (from_message_nr > 0)
+                {
+                    messageSendRequest.from_message_nr = from_message_nr;
+                }
+
+                // Call internal function
+                return this.MessageSend(messageSendRequest);
+            }
+            catch
+            {
+                // Throw the exception
+                throw;
+            }
+        }
+
+        #endregion
+
 
         public Conversation_SyncBackwardResponse SyncBackward(BigInteger from_message_nr)
         {
@@ -234,7 +313,7 @@ namespace Fleep.TypeClasses
                 conversationSyncBackwardRequest.from_message_nr = from_message_nr;
 
                 // Call the API
-                this.lastConversationSyncBackwardResponse = FleepAPI.CallAPI<Conversation_SyncBackwardResponse>(fleepClient, conversationSyncBackwardRequest.MethodPath, conversationSyncBackwardRequest.ToJSON());
+                this.lastConversationSyncBackwardResponse = FleepAPI.CallAPI<Conversation_SyncBackwardResponse>(account, conversationSyncBackwardRequest.MethodPath, conversationSyncBackwardRequest.ToJSON());
 
                 // Return Result
                 return this.lastConversationSyncBackwardResponse;
@@ -265,7 +344,7 @@ namespace Fleep.TypeClasses
                 conversationSyncRequest.mk_direction = mkDirection;
 
                 // Call the API
-                this.lastConversationSyncResponse = FleepAPI.CallAPI<Conversation_SyncResponse>(fleepClient, conversationSyncRequest.MethodPath, conversationSyncRequest.ToJSON());
+                this.lastConversationSyncResponse = FleepAPI.CallAPI<Conversation_SyncResponse>(account, conversationSyncRequest.MethodPath, conversationSyncRequest.ToJSON());
                 
                 // Return Results
                 return this.lastConversationSyncResponse;
