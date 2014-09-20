@@ -37,6 +37,7 @@ namespace Fleep.MethodClasses
         sync_progress       float           - indicates progess of sync from 0.0 to 1.0
         static_version      text            - javascript version. Client should reload when changes
         limit_time          bigint          - time limit applied to non premium users, 0 for premium users
+        
         ConvInfo:
 
         mk_rec_type         text = 'conv'
@@ -114,6 +115,7 @@ namespace Fleep.MethodClasses
         hook_key            text            - filled if message was sent via hook
         prev_message_nr     bigint          - number of previous visible message
         is_new_sheet        boolean         - start new sheet in message flow
+        
         ContactInfo:
 
         mk_rec_type         text = 'contact'

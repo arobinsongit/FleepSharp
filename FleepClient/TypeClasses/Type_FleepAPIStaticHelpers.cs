@@ -100,13 +100,14 @@ namespace Fleep.TypeClasses
                     // Deserialize the Results
                     fileUploadResponse = JsonConvert.DeserializeObject<File_UploadResponse>(Encoding.ASCII.GetString(responseBytes));              
 
-                    //Force a rename
-                    File_RenameRequest fileRenameRequest = new File_RenameRequest();
-                    fileRenameRequest.ConversationID = fileUploadRequest.ConversationID;
+                    //Force a rename TODO - When they finish updating the file interface
+                    //File_RenameRequest fileRenameRequest = new File_RenameRequest();
+                    //fileRenameRequest.ConversationID = fileUploadRequest.ConversationID;
 
-                    fileRenameRequest.file_id = fileUploadResponse.files[0].file_id;
-                    fileRenameRequest.file_name = fileUploadRequest.filename;
-                    fileRenameResponse = CallAPI<File_RenameResponse>(account, fileRenameRequest.MethodPath, fileRenameRequest.ToJSON());
+                    //fileRenameRequest.file_id = fileUploadResponse.files[0].file_id;
+                    //fileRenameRequest.file_name = fileUploadRequest.filename;
+                    
+                    //fileRenameResponse = CallAPI<File_RenameResponse>(account, fileRenameRequest.MethodPath, fileRenameRequest.ToJSON());
 
                     // Return the Results 
                     return fileUploadResponse;
