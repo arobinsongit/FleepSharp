@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using Fleep.TypeClasses;
 using Fleep.Exceptions;
 using System.Text.RegularExpressions;
+using System.Numerics;
 
 namespace Fleep.MethodClasses
 {
@@ -175,17 +176,23 @@ namespace Fleep.MethodClasses
 
         #region Outputs
 
-        [JsonProperty]
-        public string account_id { get; set; }
-
-        [JsonProperty]
-        public string display_name { get; set; }
-
-        [JsonProperty]
-        public List<AccountProfile> profiles { get; set; }
-
-        [JsonProperty]
-        public string ticket { get; set; }
+        ///<remarks>
+        /// event horizon for next poll
+        ///</remarks>
+        BigInteger event_horizon { get; set; }
+        ///<remarks>
+        AccountPollOutputSteam stream { get; set; }
+        ///<remarks>
+        /// indicates progess of sync from 0.0 to 1.0
+        ///</remarks>
+        float sync_progress { get; set; }
+        /// javascript version. Client should reload when changes
+        ///</remarks>
+        string static_version { get; set; }
+        ///<remarks>
+        /// time limit applied to non premium users, 0 for premium users
+        ///</remarks>
+        BigInteger limit_time { get; set; }
         
         #endregion
 

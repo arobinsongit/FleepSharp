@@ -16,7 +16,7 @@ namespace Fleep.TypeClasses
     // Reference : http://json2csharp.com/#
 
     [JsonObject(MemberSerialization.OptOut)]
-    public class Conversation : FleepTypeBase
+    public class Conversation : FleepFunctionalTypeBase
     {
 
         #region Declarations

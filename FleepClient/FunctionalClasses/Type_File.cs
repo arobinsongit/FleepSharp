@@ -14,7 +14,7 @@ using System.Net;
 namespace Fleep.TypeClasses
 {
     [JsonObject(MemberSerialization.OptOut)]
-    public class File : FleepTypeBase
+    public class File : FleepFunctionalTypeBase
     {
         #region Declarations
         

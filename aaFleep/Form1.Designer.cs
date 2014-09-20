@@ -47,6 +47,7 @@
             this.txtConvID = new System.Windows.Forms.TextBox();
             this.txtFileID = new System.Windows.Forms.TextBox();
             this.btnSendFile = new System.Windows.Forms.Button();
+            this.btnAccountPoll = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // button1
@@ -210,11 +211,21 @@
             this.btnSendFile.UseVisualStyleBackColor = true;
             this.btnSendFile.Click += new System.EventHandler(this.btnSendFile_Click);
             // 
+            // btnAccountPoll
+            // 
+            this.btnAccountPoll.Location = new System.Drawing.Point(526, 10);
+            this.btnAccountPoll.Name = "btnAccountPoll";
+            this.btnAccountPoll.Size = new System.Drawing.Size(75, 23);
+            this.btnAccountPoll.TabIndex = 18;
+            this.btnAccountPoll.Text = "AccountPoll";
+            this.btnAccountPoll.UseVisualStyleBackColor = true;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(782, 485);
+            this.Controls.Add(this.btnAccountPoll);
             this.Controls.Add(this.txtFileID);
             this.Controls.Add(this.btnSendFile);
             this.Controls.Add(this.txtConvID);
@@ -263,6 +274,7 @@
         private System.Windows.Forms.TextBox txtConvID;
         private System.Windows.Forms.TextBox txtFileID;
         private System.Windows.Forms.Button btnSendFile;
+        private System.Windows.Forms.Button btnAccountPoll;
     }
 }
 

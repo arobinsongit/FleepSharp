@@ -17,7 +17,7 @@ namespace Fleep.TypeClasses
     // Reference : http://json2csharp.com/#
 
     [JsonObject(MemberSerialization.OptOut)]
-    public class Account : FleepTypeBase
+    public class Account : FleepFunctionalTypeBase
     {
 
         #region Declarations
@@ -25,8 +25,7 @@ namespace Fleep.TypeClasses
         private Account_LoginResponse lastAccountLoginResponse;
         private Account_PollResponse lastAccountPollResponse;
         private WebHeaderCollection accountLoginWebHeaderCollection;
-        private string apiURL = "https://fleep.io/api/";
-
+        
         // Allow for setting Token and Ticket externally without forcing login
         private string tokenIDExternalSet = "";
         private string ticketExternalSet = "";
@@ -156,22 +155,6 @@ namespace Fleep.TypeClasses
             }
         }
 
-        public string ApiURL
-        {
-            get
-            {
-                return apiURL;
-            }
-
-            set
-            {
-                if (value != "")
-                {
-                    this.apiURL = value;
-                }
-            }
-        }
-       
         public Account_LoginResponse LastAccountLoginResponse
         {
             get { return this.lastAccountLoginResponse; }
